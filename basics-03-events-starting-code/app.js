@@ -24,6 +24,9 @@ const app = Vue.createApp({
     confirmName() {
       this.confirmedName = this.username;
     },
+    resetInput() {
+      this.confirmedName = "";
+    },
   },
 });
 
