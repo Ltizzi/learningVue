@@ -8,6 +8,7 @@ const app = Vue.createApp({
       playerHealth: 100,
       monsterHealth: 100,
       currentRound: 0,
+      winner: "",
       battleLog: [],
     };
   },
@@ -21,28 +22,42 @@ const app = Vue.createApp({
     mayUseSpecialAttack() {
       return this.currentRound % 3 != 0;
     },
-    endGame() {
-      return this.playerHealth == 0 || this.monsterHealth == 0;
-    },
+    // endGame() {
+    //   return this.playerHealth == 0 || this.monsterHealth == 0;
+    // },
   },
   watch: {
     playerHealth(value) {
-      return value == 0 ? false : true;
+      // return value == 0 ? false : true;
+      if (value == 0 && this.monsterHealth == 0) {
+        this.winner = "draw";
+      } else if (value == 0) this.winner = "monster";
     },
     monsterHealth(value) {
-      return value == 0 ? false : true;
+      // return value == 0 ? false : true;
+      if (value == 0 && this.playerHealth == 0) {
+        this.winner = "draw";
+      } else if (value == 0) this.winner = "player";
     },
   },
   methods: {
+    newGame() {
+      this.playerHealth = 100;
+      this.monsterHealth = 100;
+      this.winner = "";
+      this.currentRound = 0;
+      this.battleLog = [];
+    },
     attackMonster() {
       this.currentRound++;
       const attackValue = getRandomValue(5, 12);
       attackValue <= this.monsterHealth
         ? (this.monsterHealth -= attackValue)
         : (this.monsterHealth = 0);
-      this.battleLog.push(
-        "El jugador ataca  con " + attackValue + " puntos de daño!"
-      );
+      // this.battleLog.push(
+      //   "El jugador ataca  con " + attackValue + " puntos de daño!"
+      // );
+      this.addLogMessage("jugador", "ataca", attackValue);
       this.attackPlayer();
     },
     attackPlayer() {
@@ -50,9 +65,10 @@ const app = Vue.createApp({
       attackValue <= this.playerHealth
         ? (this.playerHealth -= attackValue)
         : (this.playerHealth = 0);
-      this.battleLog.push(
-        "El monstruo ataca  con " + attackValue + " puntos de daño!"
-      );
+      // this.battleLog.push(
+      //   "El monstruo ataca  con " + attackValue + " puntos de daño!"
+      // );
+      this.addLogMessage("monstruo", "ataca", attackValue);
     },
     specialAttackMonster() {
       this.currentRound++;
@@ -60,9 +76,10 @@ const app = Vue.createApp({
       attackValue <= this.monsterHealth
         ? (this.monsterHealth -= attackValue)
         : (this.monsterHealth = 0);
-      this.battleLog.push(
-        "El jugador ataca  con " + attackValue + " puntos de daño!"
-      );
+      // this.battleLog.push(
+      //   "El jugador ataca  con " + attackValue + " puntos de daño!"
+      // );
+      this.addLogMessage("jugador", "ataca", attackValue);
       this.attackPlayer();
     },
     healPlayer() {
@@ -72,10 +89,21 @@ const app = Vue.createApp({
       healthValue <= healthMissing
         ? (this.playerHealth += healthValue)
         : (this.playerHealth = 100);
-      this.battleLog.push(
-        "El jugador se cura " + healthValue + " puntos de vida!"
-      );
+      // this.battleLog.push(
+      //   "El jugador se cura " + healthValue + " puntos de vida!"
+      // );
+      this.addLogMessage("jugador", "cura", healthValue);
       this.attackPlayer();
+    },
+    addLogMessage(who, what, value) {
+      this.battleLog.unshift({
+        actionBy: who,
+        actionType: what,
+        actionValue: value,
+      });
+    },
+    surrender() {
+      this.winner = "monster";
     },
   },
 }).mount("#game");

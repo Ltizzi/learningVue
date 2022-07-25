@@ -29,24 +29,40 @@
           <div class="healthbar__value" :style="playerBarStyles"></div>
         </div>
       </section>
-      <section id="controls">
-        <button @click="attackMonster" :disabled="endGame">ATTACK</button>
-        <button
-          :disabled="!playerHealth || mayUseSpecialAttack"
-          @click="specialAttackMonster"
-        >
+      <section class="container" v-if="winner">
+        <h2>Game Over!</h2>
+        <h3 v-if="winner == 'draw'">Is a draw!</h3>
+        <h3 v-if="winner == 'player'">You Win!</h3>
+        <h3 v-if="winner == 'monster'">You Lost!</h3>
+        <button @click="newGame">Star New Game</button>
+      </section>
+      <section id="controls" v-else>
+        <button @click="attackMonster">ATTACK</button>
+        <button :disabled="mayUseSpecialAttack" @click="specialAttackMonster">
           SPECIAL ATTACK
         </button>
-        <button @click="healPlayer" :disabled="endGame">HEAL</button>
-        <button :disabled="endGame">SURRENDER</button>
+        <button @click="healPlayer">HEAL</button>
+        <button @click="surrender">SURRENDER</button>
       </section>
       <section id="log" class="container">
         <h2>Battle Log</h2>
         <ul>
-          <li v-if="!monsterHealth && !playerHealth">Is a draw!</li>
-          <li v-if="!monsterHealth && playerHealth">Player wins!</li>
-          <li v-if="!playerHealth && monsterHealth">Player Loose!</li>
-          <li v-for="log in battleLog">{{log}}</li>
+          <li v-for="log in battleLog">
+            El
+            <span
+              :class="{'log--player':log.actionBy== 'jugador', 'log--monster': log.actionBy == 'monstruo'}"
+            >
+              {{ log.actionBy === 'jugador'? 'jugador ': 'Monstruo '}}</span
+            >
+            <span v-if="log.actionType === 'cura' "
+              >se cura por
+              <span class="log--heal">{{log.actionValue}}</span> hp!</span
+            >
+            <span v-else
+              >ataca y hace
+              <span class="log--damage">{{log.actionValue}}</span> hp!</span
+            >
+          </li>
         </ul>
       </section>
     </div>
