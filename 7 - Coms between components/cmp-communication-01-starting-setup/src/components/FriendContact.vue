@@ -1,14 +1,7 @@
 <template>
   <li>
-    <h2>{{ name }} {{ friendIsFavorite === "1" ? "(Mejor Amigue)" : "" }}</h2>
-    <button @click="toggleFavorite">
-      <!-- {{
-        friendIsFavorite == 1
-          ? "Sacar de Mejores Amigues"
-          : "Agregar Mejor Amigue"
-      }} -->
-      Mejor Amigue
-    </button>
+    <h2>{{ name }} {{ isFavorite ? "(Mejor Amigue)" : "" }}</h2>
+    <button @click="toggleFavorite">Mejor Amigue</button>
     <button @click="toggleDetails">
       {{ detailsAreVisible ? "Hide" : "Show" }} Details
     </button>
@@ -22,9 +15,7 @@
         {{ emailAddress }}
       </li>
       <li>
-        {{
-          friendIsFavorite === "1" ? "Mejor amigue" : "Gran amigue Tita y Poppy"
-        }}
+        {{ isFavorite ? "Mejor amigue" : "Gran amigue de Tita y Poppy" }}
       </li>
     </ul>
   </li>
@@ -32,11 +23,48 @@
 
 <script>
   export default {
-    props: ["name", "phoneNumber", "emailAddress", "isFavorite"],
+    // props: ["name", "phoneNumber", "emailAddress", "isFavorite"],
+    props: {
+      id: {
+        type: Number,
+        required: true,
+      },
+      name: {
+        type: String,
+        required: true,
+      },
+      phoneNumber: {
+        type: String,
+        required: true,
+      },
+      emailAddress: {
+        type: String,
+        required: true,
+      },
+      isFavorite: {
+        type: Boolean,
+        required: false,
+        default: false,
+        // validacion:
+        // validator: function (value) {
+        //   return value === "1" || value === "0";
+        // },
+      },
+    },
+    // emits: ["toggle-favorite"],
+    emits: {
+      "toggle-favorite": function (id) {
+        if (id) {
+          return true;
+        } else {
+          console.log("Id is missing");
+          return false;
+        }
+      },
+    },
     data() {
       return {
         detailsAreVisible: false,
-        friendIsFavorite: this.isFavorite,
         friend: {
           id: "manuel",
           name: "Manuel Lorenz",
@@ -50,9 +78,8 @@
         this.detailsAreVisible = !this.detailsAreVisible;
       },
       toggleFavorite() {
-        this.friendIsFavorite === "1"
-          ? (this.friendIsFavorite = "0")
-          : (this.friendIsFavorite = "1");
+        this.$emit("toggle-favorite", this.id);
+        // this.friendIsFavorite = !this.friendIsFavorite;
       },
     },
   };
