@@ -18,6 +18,7 @@
         {{ isFavorite ? "Mejor amigue" : "Gran amigue de Tita y Poppy" }}
       </li>
     </ul>
+    <button @click="$emit('delete', id)">Delete</button>
   </li>
 </template>
 
@@ -51,17 +52,17 @@
         // },
       },
     },
-    // emits: ["toggle-favorite"],
-    emits: {
-      "toggle-favorite": function (id) {
-        if (id) {
-          return true;
-        } else {
-          console.log("Id is missing");
-          return false;
-        }
-      },
-    },
+    emits: ["toggle-favorite", "delete"],
+    // emits: {
+    //   "toggle-favorite": function (id) {
+    //     if (id) {
+    //       return true;
+    //     } else {
+    //       console.log("Id is missing");
+    //       return false;
+    //     }
+    //   },
+    // },
     data() {
       return {
         detailsAreVisible: false,
@@ -79,8 +80,11 @@
       },
       toggleFavorite() {
         this.$emit("toggle-favorite", this.id);
-        // this.friendIsFavorite = !this.friendIsFavorite;
       },
+      //commentado porque se puede hacer inline en el template
+      // deleteFriend() {
+      //   this.$emit("delete-friend", this.id);
+      // },
     },
   };
 </script>

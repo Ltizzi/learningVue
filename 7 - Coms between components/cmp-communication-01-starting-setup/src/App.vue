@@ -3,6 +3,13 @@
     <header>
       <h1>Amigues de Tita</h1>
     </header>
+    <div class="toggleButton">
+      <button class="toggleButton" @click="toggleAddFriendForm">
+        Añadir Amigue
+      </button>
+    </div>
+
+    <new-friend @add-contact="addContact" v-if="addFriendVisible"></new-friend>
     <ul>
       <friend-contact
         v-for="friend in friends"
@@ -13,6 +20,7 @@
         :email-address="friend.email"
         :is-favorite="friend.isFavorite"
         @toggle-favorite="toggleFavoriteStatus"
+        @delete="deleteFriend"
       ></friend-contact>
     </ul>
   </section>
@@ -39,6 +47,7 @@
             isFavorite: true,
           },
         ],
+        addFriendVisible: false,
       };
     },
     methods: {
@@ -47,6 +56,26 @@
           (friend) => friend.id === friendId
         );
         identifiedFriend.isFavorite = !identifiedFriend.isFavorite;
+      },
+      getLastId() {
+        return this.friends[this.friends.length].id;
+      },
+      toggleAddFriendForm() {
+        this.addFriendVisible = !this.addFriendVisible;
+      },
+      addContact(name, phone, email, bestie) {
+        const newFriendContact = {
+          id: this.getLastId + 1,
+          name: name,
+          phone: phone,
+          email: email,
+          isFavorite: bestie,
+        };
+        this.friends.push(newFriendContact);
+        this.addFriendVisible = !this.addFriendVisible;
+      },
+      deleteFriend(id) {
+        this.friends = this.friends.filter((friend) => friend.id !== id);
       },
     },
   };
@@ -62,6 +91,7 @@
   body {
     margin: 0;
   }
+
   header {
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.26);
     margin: 3rem auto;
@@ -107,5 +137,12 @@
     background-color: #ec3169;
     border-color: #ec3169;
     box-shadow: 1px 1px 4px rgba(0, 0, 0, 0.26);
+  }
+  .toggleButton {
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    width: 30%;
+    margin: 0 auto;
   }
 </style>
