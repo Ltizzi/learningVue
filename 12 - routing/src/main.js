@@ -9,9 +9,22 @@ const app = createApp(App);
 const router = createRouter({
   history: createWebHistory(),
   routes: [
-    { path: '/', component: TeamsList },
+    { path: '/', redirect: '/teams' },
+    {
+      name: 'teams',
+      path: '/teams',
+      component: TeamsList /*alias: '/'*/,
+      children: [
+        {
+          name: 'team-members',
+          path: '/teams/:teamId',
+          component: TeamMembers,
+          props: true,
+        }, //debería ir último porq lo dinámico hace que acepte cualquier valor
+      ],
+    },
     { path: '/users', component: UsersList },
-    { path: '/teams/:teamId', component: TeamMembers }, //debería ir último porq lo dinámico hace que acepte cualquier valor
+    { path: '/:notFound(.*)', redirect: '/' },
   ],
   linkActiveClass: 'active',
 });
