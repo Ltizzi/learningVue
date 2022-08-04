@@ -2,13 +2,18 @@
   <li>
     <h3>{{ name }}</h3>
     <div class="team-members">{{ memberCount }} Members</div>
-    <a href="#">View Members</a>
+    <router-link :to="teamMembersLink">View Members</router-link>
   </li>
 </template>
 
 <script>
 export default {
-  props: ['name', 'memberCount'],
+  props: ['id', 'name', 'memberCount'],
+  computed: {
+    teamMembersLink() {
+      return '/teams/' + this.id;
+    },
+  },
 };
 </script>
 
@@ -37,8 +42,9 @@ a {
   background-color: #11005c;
 }
 
+a:active,
 a:hover,
-a:active {
+a.router-link-active {
   background-color: #220a8d;
 }
 </style>
