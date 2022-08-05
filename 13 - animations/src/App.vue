@@ -1,4 +1,13 @@
 <template>
+  <router-view v-slot="slotProps">
+    <transition name="route" mode="out-in">
+      <component :is="slotProps.Component"></component>
+    </transition>
+  </router-view>
+
+  <div class="container">
+    <list-data></list-data>
+  </div>
   <div class="container">
     <div class="block" :class="{ animate: animatedBlock }"></div>
     <button @click="animateBlock">Animate</button>
@@ -9,7 +18,9 @@
     <!-- before leave  -->
     <!-- after-enter, leave, after-leave tambien funcionan, para correr código  -->
     <!-- el método tiene "el" como parámetro que es el elemento animado -->
+    <!-- :css="false" le dice a vue que no use css para la transicion-->
     <transition
+      :css="false"
       @before-enter="beforeEnter"
       @enter="enter"
       @after-enter="afterEnter"
@@ -41,7 +52,9 @@
 </template>
 
 <script>
+import ListData from './components/ListData.vue';
 export default {
+  components: { ListData },
   data() {
     return {
       dialogIsVisible: false,
@@ -224,16 +237,24 @@ button:active {
   transition: opacity 0.3s ease-in;
 }
 
+.route-enter-active {
+  animation: slide-scale 0.5s ease-out;
+}
+
+.route-leave-active {
+  animation: slide-scale 0.5s ease-in;
+}
+
 @keyframes slide-scale {
   0% {
     transform: translateX(0) scale(1);
   }
   70% {
-    transform: translateX(-120px) scale(1.1);
+    transform: translateX(-500px) scale(1.1);
   }
 
   100% {
-    transform: translateX(-150px) scale(1);
+    transform: translateX(-2000px) scale(1);
   }
 }
 </style>
