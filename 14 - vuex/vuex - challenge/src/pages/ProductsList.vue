@@ -15,14 +15,18 @@
 </template>
 
 <script>
-import ProductItem from '../components/products/ProductItem.vue';
+  import ProductItem from "../components/products/ProductItem.vue";
 
-export default {
-  inject: ['products'],
-  components: {
-    ProductItem,
-  },
-};
+  export default {
+    components: {
+      ProductItem,
+    },
+    computed: {
+      products() {
+        return this.$store.getters["prods/products"];
+      },
+    },
+  };
 </script>
 
 <style scoped>
