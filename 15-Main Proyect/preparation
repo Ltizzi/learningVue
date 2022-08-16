@@ -1,0 +1,52 @@
+DATA:{
+
+coach:
+id
+first name
+last name
+description
+rate
+areaOfExpertise
+mutations: register, setCoaches
+
+request:
+coach id
+message
+email
+mutations: contactCoach, setRequest
+
+coaches:
+list of coaches
+
+request:
+list of requests
+}
+
+LAYOUT:
+
+routes:
+/coaches => coachesList
+
+/coaches?id => coachDetails
+
+/register => coachRegistration
+
+/contact => contactCoach
+
+/requests => requestsRecieved
+
+design:
+top: header with tabs Coach | Requests
+
+coachesList:
+details
+filter for expertise
+|
+V
+coach details
+|
+V
+message to coach
+
+Requests:
+list of request (email + msg)
