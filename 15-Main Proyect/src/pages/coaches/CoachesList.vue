@@ -17,7 +17,15 @@
           <base-button mode="outline" @click="loadCoaches(true)"
             >Refresh</base-button
           >
-          <base-button link to="/register" v-if="!isCoach && !isLoading"
+          <!-- se agrega el ?redirect=register para darle a la ruta un param para q vue sepa a donde 
+          redirige el flujo luego de loguear, en este caso a register para registrarse como coach -->
+          <base-button link to="/auth?redirect=register" v-if="!isLoggedIn"
+            >Login to Register as Coach!</base-button
+          >
+          <base-button
+            link
+            to="/register"
+            v-if="isLoggedIn && !isCoach && !isLoading"
             >Register as Coach</base-button
           >
         </div>
@@ -78,6 +86,9 @@ export default {
     },
     isCoach() {
       return this.$store.getters['coaches/isCoach'];
+    },
+    isLoggedIn() {
+      return this.$store.getters.isAuthenticated;
     },
   },
   methods: {

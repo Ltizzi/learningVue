@@ -13,6 +13,22 @@ export default {
   components: {
     TheHeader,
   },
+  computed: {
+    didAutoLogout() {
+      return this.$store.getters.didAutoLogout; //valor usado para redirigir la web cuando se autologuee
+    },
+  },
+  created() {
+    this.$store.dispatch('tryLogin');
+  },
+  watch: {
+    //vigila si hubo un autologout y si es true, redirige a home
+    didAutoLogout(currentValue, oldValue) {
+      if (currentValue && currentValue !== oldValue) {
+        this.$router.replace('/coaches');
+      }
+    },
+  },
 };
 </script>
 <style>
